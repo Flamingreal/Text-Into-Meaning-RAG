@@ -1,0 +1,14 @@
+[
+  {
+    "id": "q1",
+    "query": "Where does paella come from?",
+    "gold_answer": "Paella comes from Valencia in Spain.",
+    "gold_evidence_doc_ids": ["doc_1"]
+  },
+  {
+    "id": "q2",
+    "query": "What is hummus made from?",
+    "gold_answer": "Hummus is made from chickpeas, tahini, lemon juice, and garlic.",
+    "gold_evidence_doc_ids": ["doc_2"]
+  }
+]
