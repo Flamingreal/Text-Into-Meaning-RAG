@@ -21,10 +21,12 @@ GENERATION_MODEL_NAME = "Qwen/Qwen2.5-0.5B-Instruct"
 CHUNK_SIZE = 500
 CHUNK_OVERLAP = 50
 TOP_K = 5
+RETRIEVAL_CANDIDATE_K = 12
+RETRIEVAL_ALPHA = 0.75
 MAX_NEW_TOKENS = 128
 
 # ===== Runtime =====
-DEVICE = "cuda"   # 改成 "cuda" 如果你机器支持
+DEVICE = "cpu"  # switch to "cuda" if available
 TEMPERATURE = 0.0
 
 # ===== Files =====
