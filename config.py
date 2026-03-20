@@ -1,4 +1,5 @@
 from pathlib import Path
+import torch
 
 # ===== Paths =====
 BASE_DIR = Path(__file__).resolve().parent
@@ -26,7 +27,15 @@ RETRIEVAL_ALPHA = 0.75
 MAX_NEW_TOKENS = 128
 
 # ===== Runtime =====
-DEVICE = "cpu"  # switch to "cuda" if available
+if torch.cuda.is_available():
+    DEVICE = "cuda"
+elif torch.backends.mps.is_available(): 
+    DEVICE = "mps"
+else:
+    DEVICE = "cpu"
+
+print(f"Initialize System: Running on {DEVICE.upper()} mode")
+
 TEMPERATURE = 0.0
 
 # ===== Files =====
