@@ -30,13 +30,25 @@ with open("data/corpus.jsonl", "w", encoding="utf-8") as out_f:
             
             doc_id_base = f"doc_{idx+1}"
             chunks = splitter.split_text(content)
+
+            if "Blog" in file_name:
+                doc_type = "Blog"
+                actual_source = "East Asian Culinary Blogs"
+            elif "Wiki" in file_name:
+                doc_type = "Wiki"
+                actual_source = "Wikibooks Recipes"
+            else:
+                doc_type = "Corpus"
+                actual_source = "Massive Text Corpus"
             
             for i, chunk_text in enumerate(chunks):
                 chunk_id = f"{doc_id_base}_chunk_{i}"
                 doc_data = {
                     "doc_id": chunk_id,
                     "title": file_name,
-                    "text": chunk_text
+                    "text": chunk_text,
+                    "source": actual_source,
+                    "document_type": doc_type
                 }
                 out_f.write(json.dumps(doc_data, ensure_ascii=False) + "\n")
                 # cache text and keywords for matching
