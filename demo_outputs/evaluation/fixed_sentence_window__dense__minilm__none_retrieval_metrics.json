@@ -1,0 +1,66 @@
+{
+  "run_name": "fixed_sentence_window__dense__minilm__none",
+  "evaluation_level": "doc",
+  "dataset_split": "dev",
+  "summary": {
+    "recall@1": 1.0,
+    "recall@3": 1.0,
+    "recall@5": 1.0,
+    "mrr@1": 1.0,
+    "mrr@3": 1.0,
+    "mrr@5": 1.0,
+    "ndcg@1": 1.0,
+    "ndcg@3": 1.0,
+    "ndcg@5": 0.9501149685115848
+  },
+  "per_query": [
+    {
+      "query_id": "q_000001",
+      "first_relevant_rank": 1,
+      "hit@1": 1,
+      "recall@1": 1,
+      "mrr@1": 1.0,
+      "ndcg@1": 1.0,
+      "hit@3": 1,
+      "recall@3": 1,
+      "mrr@3": 1.0,
+      "ndcg@3": 1.0,
+      "hit@5": 1,
+      "recall@5": 1,
+      "mrr@5": 1.0,
+      "ndcg@5": 1.0
+    },
+    {
+      "query_id": "q_000002",
+      "first_relevant_rank": 1,
+      "hit@1": 1,
+      "recall@1": 1,
+      "mrr@1": 1.0,
+      "ndcg@1": 1.0,
+      "hit@3": 1,
+      "recall@3": 1,
+      "mrr@3": 1.0,
+      "ndcg@3": 1.0,
+      "hit@5": 1,
+      "recall@5": 1,
+      "mrr@5": 1.0,
+      "ndcg@5": 1.0
+    },
+    {
+      "query_id": "q_000003",
+      "first_relevant_rank": 1,
+      "hit@1": 1,
+      "recall@1": 1,
+      "mrr@1": 1.0,
+      "ndcg@1": 1.0,
+      "hit@3": 1,
+      "recall@3": 1,
+      "mrr@3": 1.0,
+      "ndcg@3": 1.0,
+      "hit@5": 1,
+      "recall@5": 1,
+      "mrr@5": 1.0,
+      "ndcg@5": 0.8503449055347546
+    }
+  ]
+}

@@ -63,7 +63,6 @@ if os.path.exists(qa_file):
         raw_qa = json.load(f)
 
     if isinstance(raw_qa, list):
-        # Handle format: [{doc_id, queries: [{query, answer}, ...]}, ...]
         qa_items = []
         for item in raw_qa:
             if isinstance(item, dict):

@@ -1,0 +1,35 @@
+{
+  "run_name": "fixed_sentence_window__dense__minilm__none",
+  "dataset_split": "dev",
+  "summary": {
+    "exact_match": 0.0,
+    "token_f1": 0.12729559748427674,
+    "rouge_l_f1": 0.12729559748427674
+  },
+  "per_query": [
+    {
+      "query_id": "q_000001",
+      "exact_match": 0.0,
+      "token_f1": 0.07999999999999999,
+      "rouge_l_f1": 0.07999999999999999,
+      "gold_answer": "Southeast Asia",
+      "generated_answer": "Laksa is commonly associated with Peranakan culinary traditions in Southeast Asia. The context states that it is particularly linked to these regions. Therefore, based on the provided context, we can conclude that Laksa is associated with Peranakan culinary traditions in Southeast Asia.Human resources (HR) professionals have been working for"
+    },
+    {
+      "query_id": "q_000002",
+      "exact_match": 0.0,
+      "token_f1": 0.2641509433962264,
+      "rouge_l_f1": 0.2641509433962264,
+      "gold_answer": "The Minangkabau culture of West Sumatra in Indonesia",
+      "generated_answer": "The culture that is said to originate from rendang is the Minangkabau culture of West Sumatra in Indonesia. Based on the information provided in Contexts 1 and 2, it can be inferred that rendang originated from this cultural background. However, without additional details or specific evidence from Context 3"
+    },
+    {
+      "query_id": "q_000003",
+      "exact_match": 0.0,
+      "token_f1": 0.03773584905660378,
+      "rouge_l_f1": 0.03773584905660378,
+      "gold_answer": "Japan",
+      "generated_answer": "Japan\n\nThe context provides information about sushi's history in Japan, including its development from older forms of preserved fish and rice dishes. This directly supports that sushi is strongly associated with Japan. Therefore, the answer is Japan. Based on the provided context, there is no information supporting or contradicting the statement that sushi is strongly"
+    }
+  ]
+}

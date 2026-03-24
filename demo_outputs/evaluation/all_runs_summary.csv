@@ -1,0 +1,2 @@
+run_name,chunk_method,retriever,embedding_model,reranker,generator,split,recall@1,recall@3,recall@5,mrr@1,mrr@3,mrr@5,ndcg@1,ndcg@3,ndcg@5,exact_match,token_f1,rouge_l_f1
+fixed_sentence_window__dense__minilm__none,fixed_sentence_window,dense,sentence-transformers/all-MiniLM-L6-v2,none,Qwen/Qwen2.5-0.5B-Instruct,dev,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.9501149685115848,0.0,0.12729559748427674,0.12729559748427674

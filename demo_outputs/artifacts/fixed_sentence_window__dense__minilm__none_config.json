@@ -1,0 +1,25 @@
+{
+  "debug": true,
+  "active_split": "dev",
+  "eval_k_values": [
+    1,
+    3,
+    5
+  ],
+  "main_k": 5,
+  "chunk_method": "fixed_sentence_window",
+  "target_chunk_chars": 280,
+  "chunk_overlap_sentences": 1,
+  "min_chunk_chars": 80,
+  "max_chunk_chars": 420,
+  "embedding_model_name": "sentence-transformers/all-MiniLM-L6-v2",
+  "retrieval_top_k": 5,
+  "use_reranker": false,
+  "reranker_model_name": "BAAI/bge-reranker-base",
+  "rerank_top_k": 5,
+  "generator_model_name": "Qwen/Qwen2.5-0.5B-Instruct",
+  "max_new_tokens": 64,
+  "temperature": 0.0,
+  "do_sample": false,
+  "context_top_n": 3
+}
