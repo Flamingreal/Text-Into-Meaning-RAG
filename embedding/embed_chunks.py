@@ -27,20 +27,8 @@ stem = {input_stem}.{model_safe_name}
   e.g. chunks_embedding.Qwen__Qwen3-Embedding-4B
 
 Usage examples:
-  # default: chunks_embedding.jsonl + 4B model
+  # default: chunks_embedding.jsonl + 0.6B model
   python embedding/embed_chunks.py
-
-  # different chunk file
-  python embedding/embed_chunks.py --input artifacts/chunks/chunks_tfidf.jsonl
-
-  # different model
-  python embedding/embed_chunks.py --model model_checkpoints/Qwen__Qwen3-Embedding-0.6B
-
-  # 0.6B model + tfidf chunks, larger batch
-  python embedding/embed_chunks.py \\
-      --input  artifacts/chunks/chunks_tfidf.jsonl \\
-      --model  model_checkpoints/Qwen__Qwen3-Embedding-0.6B \\
-      --batch-size 16
 """
 
 import argparse
@@ -54,9 +42,9 @@ import faiss
 import numpy as np
 
 # ── defaults ──────────────────────────────────────────────────────────────────
-DEFAULT_INPUT      = Path("artifacts/chunks/chunks_embedding.jsonl")
+DEFAULT_INPUT      = Path("artifacts/chunks/chunks_tfidf.jsonl")
 DEFAULT_MODEL      = "Qwen/Qwen3-Embedding-0.6B"
-DEFAULT_OUTPUT_DIR = Path("artifacts/faiss")
+DEFAULT_OUTPUT_DIR = Path(f"artifacts/faiss")
 DEFAULT_INDEX_TYPE = "FlatIP"   # inner product; with L2 normalisation equals cosine similarity
 DEFAULT_NORMALIZE  = True
 DEFAULT_BATCH_SIZE = 4
@@ -392,6 +380,49 @@ def run_embedding(
     print(f"  ✓ manifest     -> {manifest_path}")
 
     print(f"\nDone. {index.ntotal} vectors stored in FAISS.\n")
+
+
+def run_chunk_embedding(
+    input_path: Path | str = DEFAULT_INPUT,
+    output_dir: Path | str = DEFAULT_OUTPUT_DIR,
+    model_ref: str = DEFAULT_MODEL,
+    index_type: str = DEFAULT_INDEX_TYPE,
+    normalize: bool = DEFAULT_NORMALIZE,
+    batch_size: int = DEFAULT_BATCH_SIZE,
+    max_length: int = DEFAULT_MAX_LENGTH,
+    dry_run: bool = False,
+) -> Dict[str, Path]:
+    """
+    Notebook-friendly wrapper around run_embedding with returned artifact paths.
+
+    Returns:
+        A dict containing:
+          - index_path
+          - meta_jsonl_path
+          - manifest_path
+    """
+    in_path = Path(input_path)
+    out_dir = Path(output_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    run_embedding(
+        input_path=in_path,
+        output_dir=out_dir,
+        model_ref=model_ref,
+        index_type=index_type,
+        normalize=normalize,
+        batch_size=batch_size,
+        max_length=max_length,
+        dry_run=dry_run,
+    )
+
+    model_safe = safe_model_name(model_ref)
+    stem = f"{in_path.stem}.{model_safe}.nlp_prefix.{index_type}"
+    return {
+        "index_path": out_dir / f"{stem}.index",
+        "meta_jsonl_path": out_dir / f"{stem}.meta.jsonl",
+        "manifest_path": out_dir / f"{stem}.manifest.json",
+    }
 
 
 # ── CLI ───────────────────────────────────────────────────────────────────────

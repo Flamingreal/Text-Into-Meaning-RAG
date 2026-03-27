@@ -518,6 +518,49 @@ def semantic_chunk_embedding(
               f"({c['word_count']}w, {sim_str}) — {preview}…")
 
 
+def run_embedding_chunking(
+    input_path: Path | str = INPUT_PATH,
+    output_path: Path | str = OUTPUT_PATH,
+    model_name: str = MODEL_NAME,
+    threshold: float = THRESHOLD,
+    max_words: int = MAX_WORDS,
+    min_words: int = MIN_WORDS,
+    batch_size: int = BATCH_SIZE,
+    run_calibrate: bool = False,
+) -> Path:
+    """
+    Notebook-friendly wrapper for embedding semantic chunking.
+
+    Args:
+        input_path:    Input chunk JSONL path (usually fixed chunks).
+        output_path:   Output embedding chunk JSONL path.
+        model_name:    Sentence-transformer model name/path.
+        threshold:     Cosine similarity threshold for merging.
+        max_words:     Hard word ceiling per chunk.
+        min_words:     Stub threshold; chunks below this are force-merged.
+        batch_size:    Embedding inference batch size.
+        run_calibrate: If True, print calibration stats and exit early.
+
+    Returns:
+        Output path (Path) for convenient downstream use.
+    """
+    in_path = Path(input_path)
+    out_path = Path(output_path)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+
+    semantic_chunk_embedding(
+        input_path=in_path,
+        output_path=out_path,
+        model_name=model_name,
+        threshold=threshold,
+        max_words=max_words,
+        min_words=min_words,
+        batch_size=batch_size,
+        run_calibrate=run_calibrate,
+    )
+    return out_path
+
+
 if __name__ == "__main__":
     import argparse
 
@@ -537,13 +580,13 @@ if __name__ == "__main__":
                         help="Print similarity stats to help calibrate threshold, then exit")
     args = parser.parse_args()
 
-    semantic_chunk_embedding(
-        input_path   = Path(args.input),
-        output_path  = Path(args.output),
-        model_name   = args.model,
-        threshold    = args.threshold,
-        max_words    = args.max_words,
-        min_words    = args.min_words,
-        batch_size   = args.batch_size,
-        run_calibrate= args.calibrate,
+    run_embedding_chunking(
+        input_path=Path(args.input),
+        output_path=Path(args.output),
+        model_name=args.model,
+        threshold=args.threshold,
+        max_words=args.max_words,
+        min_words=args.min_words,
+        batch_size=args.batch_size,
+        run_calibrate=args.calibrate,
     )

@@ -233,6 +233,37 @@ def chunk_corpus(input_path: Path, output_path: Path,
               f"({c['word_count']} w) — {preview}…")
 
 
+def run_fixed_chunking(
+    input_path: Path | str = INPUT_PATH,
+    output_path: Path | str = OUTPUT_PATH,
+    target_words: int = TARGET_WORDS,
+    max_words: int = MAX_WORDS,
+) -> Path:
+    """
+    Notebook-friendly wrapper for fixed-size structural chunking.
+
+    Args:
+        input_path:   Source corpus JSONL path.
+        output_path:  Destination chunk JSONL path.
+        target_words: Soft merge target in words.
+        max_words:    Hard split ceiling in words.
+
+    Returns:
+        Output path (Path) for convenient downstream use.
+    """
+    in_path = Path(input_path)
+    out_path = Path(output_path)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+
+    chunk_corpus(
+        input_path=in_path,
+        output_path=out_path,
+        target=target_words,
+        max_wds=max_words,
+    )
+    return out_path
+
+
 if __name__ == "__main__":
     import argparse
 
@@ -245,5 +276,9 @@ if __name__ == "__main__":
                         help="Hard split ceiling in words (default 200)")
     args = parser.parse_args()
 
-    chunk_corpus(Path(args.input), Path(args.output),
-                 target=args.target, max_wds=args.max)
+    run_fixed_chunking(
+        input_path=Path(args.input),
+        output_path=Path(args.output),
+        target_words=args.target,
+        max_words=args.max,
+    )
