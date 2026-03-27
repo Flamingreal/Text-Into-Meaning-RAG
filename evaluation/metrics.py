@@ -98,6 +98,13 @@ def reciprocal_rank(retrieved: List[Dict[str, Any]], gt_chunk_id: int) -> float:
     return 0.0
 
 
+def mrr_at_k(retrieved: List[Dict[str, Any]], gt_chunk_id: int, k: int) -> float:
+    for rank, chunk in enumerate(retrieved[:k], start=1):
+        if _is_hit_by_id(chunk, gt_chunk_id):
+            return 1.0 / rank
+    return 0.0
+
+
 def ndcg_at_k(retrieved: List[Dict[str, Any]], gt_chunk_id: int, k: int) -> float:
     for rank, chunk in enumerate(retrieved[:k], start=1):
         if _is_hit_by_id(chunk, gt_chunk_id):
@@ -124,9 +131,9 @@ def evaluate(
         verbose:   Print per-query hit/miss status when True.
 
     Returns:
-        Dict with keys "MRR", "Recall@k", "NDCG@k" for each k in ks.
+        Dict with keys "MRR@k", "Recall@k", "NDCG@k" for each k in ks.
     """
-    rr_list: List[float] = []
+    mrr_acc:    Dict[int, List[float]] = {k: [] for k in ks}
     recall_acc: Dict[int, List[float]] = {k: [] for k in ks}
     ndcg_acc:   Dict[int, List[float]] = {k: [] for k in ks}
 
@@ -136,10 +143,8 @@ def evaluate(
         hits = pipeline.retrieve(item["query"], top_k=eval_top_k)
         gt_id = item["gt_chunk_id"]
 
-        rr = reciprocal_rank(hits, gt_id)
-        rr_list.append(rr)
-
         for k in ks:
+            mrr_acc[k].append(mrr_at_k(hits, gt_id, k))
             recall_acc[k].append(recall_at_k(hits, gt_id, k))
             ndcg_acc[k].append(ndcg_at_k(hits, gt_id, k))
 
@@ -152,8 +157,9 @@ def evaluate(
             print(f"  [{status:>7}]  gt={gt_id:4d}  {item['query'][:65]}")
 
     n = len(benchmark)
-    metrics: Dict[str, float] = {"MRR": sum(rr_list) / n}
+    metrics: Dict[str, float] = {}
     for k in ks:
+        metrics[f"MRR@{k}"]    = sum(mrr_acc[k])    / n
         metrics[f"Recall@{k}"] = sum(recall_acc[k]) / n
         metrics[f"NDCG@{k}"]   = sum(ndcg_acc[k])   / n
 
@@ -186,7 +192,7 @@ def evaluate_from_files(
         verbose:        Print per-query hit/miss status when True.
 
     Returns:
-        Dict with keys "MRR", "Recall@k", "NDCG@k" for each k in ks.
+        Dict with keys "MRR@k", "Recall@k", "NDCG@k" for each k in ks.
     """
     with open(output_path, encoding="utf-8") as fh:
         output = json.load(fh)
@@ -206,7 +212,7 @@ def evaluate_from_files(
             context.append(entry)
         output_by_qid[qid] = context
 
-    rr_list: List[float] = []
+    mrr_acc:    Dict[int, List[float]] = {k: [] for k in ks}
     recall_acc: Dict[int, List[float]] = {k: [] for k in ks}
     ndcg_acc:   Dict[int, List[float]] = {k: [] for k in ks}
     skipped = 0
@@ -220,10 +226,8 @@ def evaluate_from_files(
         hits = output_by_qid[qid]
         gt_id = item["gt_chunk_id"]
 
-        rr = reciprocal_rank(hits, gt_id)
-        rr_list.append(rr)
-
         for k in ks:
+            mrr_acc[k].append(mrr_at_k(hits, gt_id, k))
             recall_acc[k].append(recall_at_k(hits, gt_id, k))
             ndcg_acc[k].append(ndcg_at_k(hits, gt_id, k))
 
@@ -238,12 +242,13 @@ def evaluate_from_files(
     if skipped:
         print(f"  [Warning] {skipped} benchmark queries not found in output file.")
 
-    n = len(rr_list)
+    n = len(mrr_acc[ks[0]])
     if n == 0:
         raise ValueError("No matching query_ids found between output and benchmark.")
 
-    metrics: Dict[str, float] = {"MRR": sum(rr_list) / n}
+    metrics: Dict[str, float] = {}
     for k in ks:
+        metrics[f"MRR@{k}"]    = sum(mrr_acc[k])    / n
         metrics[f"Recall@{k}"] = sum(recall_acc[k]) / n
         metrics[f"NDCG@{k}"]   = sum(ndcg_acc[k])   / n
 
