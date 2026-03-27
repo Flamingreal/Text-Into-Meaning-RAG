@@ -7,7 +7,7 @@ This repo mainly contains:
 - **Inference and Evaluation Pipelines:** `./inference_eval_pipeline.ipynb`
 
 - **Experiment Source Code:** `./chunking`, `./embedding`,  `./retrieval`, `./generation`, and  `./evaluation`
-- **Corpus, and Web Crawler:** `./corpus`
+- **Corpus JSONL, and Web Crawler:** `./corpus/*.jsonl`, `corpus/east-asian-corpus-builder`
 - **Benchmark for Inference Demo: ** `./benchmark/`
 - **Chunked Files and FAISS Vector Base:** `./artifacts/`
 
@@ -19,7 +19,7 @@ This repo mainly contains:
 - **Cross-encoder reranking**: Higher precision in final context selection.
 - **Stepwise Prompting**: Enhance generation quality by reducing hallucination.
 
-# 1. Codebase
+# 1. Pipeline Codebase
 
 ## 1.1 Environment Set-up
 
@@ -58,7 +58,9 @@ Run it in order from top to bottom.
 
 ## 1.3 Optional: Rebuild Artifacts from Scratch
 
-If you want to regenerate chunks and FAISS artifacts instead of using existing files:
+This step can also be implemented by running the `Chunking` and `Chunk Embedding` sections in the notebook. 
+
+If you want to regenerate chunks and FAISS artifacts instead of using existing files: 
 
 ### 1) Chunk the Corpus
 
