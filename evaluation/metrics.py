@@ -18,7 +18,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 
-# ── helpers ───────────────────────────────────────────────────────────────────
+#  helpers 
 
 def _strip_part(section: str) -> str:
     return re.sub(r"\s*\(part\s*\d+\)\s*$", "", section, flags=re.IGNORECASE).strip()
@@ -37,7 +37,7 @@ def _is_hit_by_title_section(chunk: Dict[str, Any], gt_title: str, gt_section: s
     return gt_section in cleaned
 
 
-# ── benchmark loading ─────────────────────────────────────────────────────────
+#  benchmark loading 
 
 def load_benchmark(benchmark_path: Path) -> List[Dict[str, Any]]:
     """
@@ -57,13 +57,13 @@ def load_benchmark(benchmark_path: Path) -> List[Dict[str, Any]]:
 
     items = []
     for entry in entries:
-        # ── query id ──────────────────────────────────────────────────────────
+        #  query id 
         query_id = entry.get("query_id") or entry.get("id")
 
-        # ── query text ────────────────────────────────────────────────────────
+        #  query text 
         query = entry.get("query") or entry.get("question", "")
 
-        # ── ground-truth chunk id ─────────────────────────────────────────────
+        #  ground-truth chunk id 
         emb_raw = entry["chunk_ids"]["embedding"]
         if isinstance(emb_raw, int):
             gt_chunk_id = emb_raw
@@ -85,7 +85,7 @@ def load_benchmark(benchmark_path: Path) -> List[Dict[str, Any]]:
     return items
 
 
-# ── per-query metrics ─────────────────────────────────────────────────────────
+#  per-query metrics 
 
 def recall_at_k(retrieved: List[Dict[str, Any]], gt_chunk_id: int, k: int) -> float:
     return 1.0 if any(_is_hit_by_id(c, gt_chunk_id) for c in retrieved[:k]) else 0.0
@@ -105,7 +105,7 @@ def ndcg_at_k(retrieved: List[Dict[str, Any]], gt_chunk_id: int, k: int) -> floa
     return 0.0
 
 
-# ── full evaluation ───────────────────────────────────────────────────────────
+#  full evaluation 
 
 def evaluate(
     pipeline,
@@ -160,7 +160,7 @@ def evaluate(
     return metrics
 
 
-# ── file-based evaluation ─────────────────────────────────────────────────────
+#  file-based evaluation 
 
 def evaluate_from_files(
     output_path: Path,
@@ -250,7 +250,7 @@ def evaluate_from_files(
     return metrics
 
 
-# ── display ───────────────────────────────────────────────────────────────────
+#  display 
 
 def print_metrics(metrics: Dict[str, float]) -> None:
     print("\n" + "=" * 40)

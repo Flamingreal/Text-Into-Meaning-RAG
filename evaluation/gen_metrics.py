@@ -2,8 +2,6 @@
 Generation Quality Evaluation
 ==============================
 
-Two metrics:
-
 Token F1 Score
 --------------
   Same normalisation + token overlap as SQuAD open-domain QA evaluation.
@@ -25,7 +23,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 
-# ── Token F1 ──────────────────────────────────────────────────────────────────
+#  Token F1 
 
 def _normalize(text: str) -> List[str]:
     """Lowercase, strip articles + punctuation, tokenize on whitespace."""
@@ -69,7 +67,7 @@ def token_f1(prediction: str, reference: str) -> Dict[str, float]:
     return {"precision": precision, "recall": recall, "f1": f1}
 
 
-# ── BERTScore ─────────────────────────────────────────────────────────────────
+#  BERTScore 
 
 def bert_score_batch(
     predictions: List[str],
@@ -112,7 +110,7 @@ def bert_score_batch(
     ]
 
 
-# ── Dataset alignment ─────────────────────────────────────────────────────────
+#  Dataset alignment 
 
 def align_outputs_to_benchmark(
     output_payload: Dict[str, Any],
@@ -147,7 +145,7 @@ def align_outputs_to_benchmark(
     return aligned
 
 
-# ── Full evaluation ───────────────────────────────────────────────────────────
+#  Full evaluation 
 
 def evaluate_generation(
     output_payload: Dict[str, Any],
@@ -212,7 +210,7 @@ def evaluate_generation(
     }
 
 
-# ── Display ───────────────────────────────────────────────────────────────────
+#  Display 
 
 def print_gen_metrics(results: Dict[str, Any]) -> None:
     n = results["n"]

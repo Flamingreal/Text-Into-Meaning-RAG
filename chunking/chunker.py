@@ -33,12 +33,12 @@ import re
 from pathlib import Path
 from typing import List, Dict, Any
 
-# ── tunables ──────────────────────────────────────────────────────────────────
+#  tunables 
 INPUT_PATH   = Path("corpus/corpus.jsonl")          # adjust if needed
 OUTPUT_PATH  = Path("artifacts/chunks/corpus_fixed.jsonl")
 TARGET_WORDS = 150   # soft target: merge below this
 MAX_WORDS    = 200   # hard ceiling: split above this
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 
 
 def word_count(text: str) -> int:
@@ -217,7 +217,7 @@ def chunk_corpus(input_path: Path, output_path: Path,
         for chunk in all_chunks:
             fh.write(json.dumps(chunk, ensure_ascii=False) + "\n")
 
-    # ── summary stats ────────────────────────────────────────────────────────
+    #  summary stats 
     wcs = [c["word_count"] for c in all_chunks]
     import statistics
     print(f"\nDone.  {len(all_chunks)} chunks written to {output_path}")

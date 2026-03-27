@@ -41,7 +41,7 @@ from typing import Any, Dict, List
 import faiss
 import numpy as np
 
-# ── defaults ──────────────────────────────────────────────────────────────────
+#  defaults 
 DEFAULT_INPUT      = Path("artifacts/chunks/chunks_tfidf.jsonl")
 DEFAULT_MODEL      = "Qwen/Qwen3-Embedding-0.6B"
 DEFAULT_OUTPUT_DIR = Path(f"artifacts/faiss")
@@ -57,10 +57,10 @@ DOC_INSTRUCTION = "Represent this passage for retrieval:"
 
 # Local directory where downloaded model checkpoints are stored.
 LOCAL_CHECKPOINTS_DIR = Path("model_checkpoints")
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 
 
-# ── prefix construction ───────────────────────────────────────────────────────
+#  prefix construction 
 
 def _strip_cookbook(title: str) -> str:
     """Strip the Wikibooks 'Cookbook:' prefix from a title."""
@@ -134,7 +134,7 @@ def build_embed_text(chunk: Dict[str, Any]) -> str:
     return f"{prefix}\n\n{text}"
 
 
-# ── I/O helpers ───────────────────────────────────────────────────────────────
+#  I/O helpers 
 
 def load_chunks(path: Path) -> List[Dict[str, Any]]:
     chunks = []
@@ -160,7 +160,7 @@ def safe_model_name(model_ref: str) -> str:
     return str(p).replace("/", "__").replace("\\", "__")
 
 
-# ── model resolution ──────────────────────────────────────────────────────────
+#  model resolution 
 
 def resolve_model_ref(model_ref: str) -> str:
     """
@@ -200,7 +200,7 @@ def resolve_model_ref(model_ref: str) -> str:
     return model_ref
 
 
-# ── embedding ─────────────────────────────────────────────────────────────────
+#  embedding 
 
 def encode_texts(
     texts: List[str],
@@ -255,7 +255,7 @@ def encode_texts(
     return embeddings.astype(np.float32)
 
 
-# ── FAISS index ───────────────────────────────────────────────────────────────
+#  FAISS index 
 
 def build_faiss_index(embeddings: np.ndarray, index_type: str) -> faiss.Index:
     dim = embeddings.shape[1]
@@ -269,7 +269,7 @@ def build_faiss_index(embeddings: np.ndarray, index_type: str) -> faiss.Index:
     return index
 
 
-# ── main pipeline ─────────────────────────────────────────────────────────────
+#  main pipeline 
 
 def run_embedding(
     input_path:  Path  = DEFAULT_INPUT,
@@ -291,7 +291,7 @@ def run_embedding(
     """
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    # ── 1. load chunks ────────────────────────────────────────────────────────
+    #  1. load chunks 
     print(f"\n{'='*60}")
     print(f"Input : {input_path}")
     print(f"Model : {model_ref}")
@@ -302,7 +302,7 @@ def run_embedding(
     chunks = load_chunks(input_path)
     print(f"  {len(chunks)} chunks loaded.")
 
-    # ── 2. build embed texts ──────────────────────────────────────────────────
+    #  2. build embed texts 
     print("\n[2/4] Building embed_text (natural_language_prefix strategy) ...")
     embed_texts = [build_embed_text(c) for c in chunks]
 
@@ -323,11 +323,11 @@ def run_embedding(
             print(embed_texts[i][:300])
         return
 
-    # ── 3. encode ─────────────────────────────────────────────────────────────
+    #  3. encode 
     print("\n[3/4] Encoding vectors ...")
     embeddings = encode_texts(embed_texts, model_ref, batch_size, max_length, normalize)
 
-    # ── 4. build and save FAISS ───────────────────────────────────────────────
+    #  4. build and save FAISS 
     print("\n[4/4] Building FAISS index and saving artifacts ...")
     index = build_faiss_index(embeddings, index_type)
     print(f"  Index contains {index.ntotal} vectors of dimension {embeddings.shape[1]}.")
@@ -425,7 +425,7 @@ def run_chunk_embedding(
     }
 
 
-# ── CLI ───────────────────────────────────────────────────────────────────────
+#  CLI 
 
 def _parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(

@@ -1,0 +1,12 @@
+numpy
+faiss-cpu
+sentence-transformers
+transformers
+accelerate
+torch
+rank-bm25
+bert-score
+scikit-learn
+jupyter
+ipykernel
+tqdm

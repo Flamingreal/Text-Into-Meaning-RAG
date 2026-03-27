@@ -108,7 +108,7 @@ class RAGGenerator:
         self.model.eval()
         print(f"[Generator] Ready.")
 
-    # ── single query ──────────────────────────────────────────────────────────
+    #  single query 
 
     def generate(
         self,
@@ -160,7 +160,7 @@ class RAGGenerator:
         generated_ids = outputs[0][input_len:]
         return self.tokenizer.decode(generated_ids, skip_special_tokens=True).strip()
 
-    # ── batch payload ─────────────────────────────────────────────────────────
+    #  batch payload 
 
     def fill_responses(
         self,

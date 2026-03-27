@@ -52,7 +52,7 @@ from collections import defaultdict
 
 import numpy as np
 
-# ── tunables ──────────────────────────────────────────────────────────────────
+#  tunables 
 INPUT_PATH  = Path("artifacts/chunks/corpus_fixed.jsonl")
 OUTPUT_PATH = Path("artifacts/chunks/chunks_embedding.jsonl")
 
@@ -65,10 +65,10 @@ THRESHOLD   = 0.78   # cosine sim threshold — merge if sim >= this value
 MAX_WORDS   = 260    # hard ceiling for a merged chunk (words)
 MIN_WORDS   = 40     # stub threshold: force-merge chunks below this
 BATCH_SIZE  = 64     # encoding batch size (reduce if OOM)
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 
 
-# ── helpers ───────────────────────────────────────────────────────────────────
+#  helpers 
 
 def load_chunks(path: Path) -> List[Dict[str, Any]]:
     chunks = []
@@ -157,7 +157,7 @@ def cosine_sim(a: np.ndarray, b: np.ndarray) -> float:
     return float(np.dot(a, b))
 
 
-# ── per-group processing ──────────────────────────────────────────────────────
+#  per-group processing 
 
 def process_recipe_group(group: List[Dict]) -> List[Dict]:
     """Recipes: only merge explicit part continuations, no sim merging."""
@@ -195,7 +195,7 @@ def process_group_embedding(
       Pass 2 — embedding similarity merging
     """
 
-    # ── Pass 1: stub absorption ──────────────────────────────────────────────
+    #  Pass 1: stub absorption 
     def absorb_stubs(chunks: List[Dict]) -> List[Dict]:
         if len(chunks) <= 1:
             return chunks
@@ -232,7 +232,7 @@ def process_group_embedding(
             c.setdefault("_boundary_sims", [])
         return group
 
-    # ── Pass 2: embedding similarity merging ─────────────────────────────────
+    #  Pass 2: embedding similarity merging 
     # For merged chunks, use the *last original id* as the embedding proxy
     # (the end of the accumulation is semantically closest to the next chunk)
     def get_embedding(chunk: Dict) -> Optional[np.ndarray]:
@@ -273,7 +273,7 @@ def process_group_embedding(
     return result
 
 
-# ── calibration helper ────────────────────────────────────────────────────────
+#  calibration helper 
 
 def calibrate(chunks: List[Dict], embeddings: np.ndarray, n_samples: int = 200) -> None:
     """
@@ -327,7 +327,7 @@ def calibrate(chunks: List[Dict], embeddings: np.ndarray, n_samples: int = 200) 
                         return
 
 
-# ── post-processing ───────────────────────────────────────────────────────────
+#  post-processing 
 
 def post_process_chunks(chunks: List[Dict], min_words: int, max_words: int) -> List[Dict]:
     """
@@ -344,7 +344,7 @@ def post_process_chunks(chunks: List[Dict], min_words: int, max_words: int) -> L
       merge_method becomes "post_stub".
     """
 
-    # ── Pass 1: re-split oversized same_section chunks ───────────────────────
+    #  Pass 1: re-split oversized same_section chunks 
     fixed: List[Dict] = []
     for c in chunks:
         if c.get("merge_method") == "same_section" and c["word_count"] > max_words:
@@ -379,7 +379,7 @@ def post_process_chunks(chunks: List[Dict], min_words: int, max_words: int) -> L
         else:
             fixed.append(c)
 
-    # ── Pass 2: global stub absorption ──────────────────────────────────────
+    #  Pass 2: global stub absorption 
     changed = True
     while changed:
         changed = False
@@ -431,7 +431,7 @@ def post_process_chunks(chunks: List[Dict], min_words: int, max_words: int) -> L
     return fixed
 
 
-# ── main ──────────────────────────────────────────────────────────────────────
+#  main 
 
 def semantic_chunk_embedding(
     input_path  : Path  = INPUT_PATH,
@@ -470,7 +470,7 @@ def semantic_chunk_embedding(
             processed = process_group_embedding(group, embeddings)
         all_output.extend(processed)
 
-    # ── Post-processing: fix oversized same_section + absorb remaining stubs ──
+    #  Post-processing: fix oversized same_section + absorb remaining stubs 
     print("Post-processing: splitting oversized chunks and absorbing stubs …")
     before_pp = len(all_output)
     all_output = post_process_chunks(all_output, min_words=min_words, max_words=max_words)
@@ -491,7 +491,7 @@ def semantic_chunk_embedding(
         for chunk in all_output:
             fh.write(json.dumps(chunk, ensure_ascii=False) + "\n")
 
-    # ── stats ────────────────────────────────────────────────────────────────
+    #  stats 
     import statistics
     wcs = [c["word_count"] for c in all_output]
     methods = defaultdict(int)

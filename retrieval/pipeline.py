@@ -56,7 +56,7 @@ class RetrievalPipeline:
         self.dense = DenseRetriever(faiss_manifest_path)
         self.reranker = CrossEncoderReranker(cross_encoder_model)
 
-    # ── single-query retrieval ────────────────────────────────────────────────
+    #  single-query retrieval 
 
     def retrieve(
         self,
@@ -112,7 +112,7 @@ class RetrievalPipeline:
             )
         return results
 
-    # ── batch payload ─────────────────────────────────────────────────────────
+    #  batch payload 
 
     def run_batch(self, payload: Dict[str, Any]) -> Dict[str, Any]:
         """
